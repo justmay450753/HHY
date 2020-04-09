@@ -1,0 +1,80 @@
+﻿<link href="~/css/product.css" rel="stylesheet" />
+<div id="content" class="row">
+    <div class="col-12 productbanner">
+        <a :href="banner.link"><img :src="banner.imageUrl" /></a>
+    </div>
+    <div class="col-12 pdlist">
+        <div class="col-4 pd-list-content" v-for="item in content">
+            <div class="pdImage">
+                <a :href="item.link" target="_blank">
+                    <img :src="item.imageUrl" :title="item.name">
+                </a>
+            </div>
+            <div class="pd-list-title">
+                <p><a class="pdtext" :href="item.link">{{item.productName}} <span>{{item.weight}}</span></a></p>
+            </div>
+            <div class="pd-layout-price">
+                <p v-if="item.origanalPrice !== item.salePrice" class="pdprice discount">NT${{item.origanalPrice}}</p>
+                <p v-else class="pdprice">NT${{item.origanalPrice}}</p>
+                <p v-if="item.origanalPrice === item.salePrice" class="pdprice-dis-noshow">NT${{item.salePrice}}</p>
+                <p v-else class="pdprice">NT${{item.salePrice}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#content',
+            data: function () {
+                return {
+                    content: [],
+                    banner: {
+                        link: null,
+                        imageUrl: null
+                    },
+                    RequestProduct: {
+                        IsPromotion: null
+                    }
+                }
+            },
+            mounted: function () {
+                this.getProductList();
+                this.getBanner();
+            },
+            methods: {
+                getProductList: function () {
+                    var self = this;
+                    var url = window.location.search;
+                    var arr = url.split("IsPromotion=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+                    self.RequestProduct.IsPromotion = id;
+                    sessionStorage.clear();
+
+                    $.ajax({
+                        type: 'Post',
+                        url: '/api/web/productlist',
+                        data: self.RequestProduct,
+                        statusCode: {},
+                        success: function (result) {
+                            self.content = result;
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.message);
+                        }
+                    });
+                },
+                getBanner: function () {
+                    var self = this;
+                    $.get('/api/web/productbanner')
+                        .done(function (result) {
+                            self.banner = result;
+                        })
+                        .fail(function () {
+                        });
+                }
+            }
+        })
+    </script>
+}

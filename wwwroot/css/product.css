@@ -1,0 +1,161 @@
+﻿.pdcontent {
+    margin-top: 100px;
+}
+
+.pd-img img {
+    width: 100%
+}
+
+.pd-title {
+    color: #D7AF78;
+    font-weight: bold;
+    font-size: 1rem
+}
+
+.pd-subtitle {
+    color: #ee9d9d;
+    text-align: center;
+    padding: 15px 0px;
+    font-size: 0.8rem
+}
+
+.pd-price {
+    height: 30px;
+    margin: 0px auto;
+    padding-top: calc(30px - 1.6rem);
+}
+
+.price {
+    font-size: 0.8rem;
+    color: #959291;
+    padding-right: 0.3rem;
+}
+
+.price-dis {
+    font-size: 1rem;
+    color: #ee9d9d;
+    font-weight: bold;
+}
+
+.discount {
+    text-decoration: line-through;
+}
+
+.price-dis-noshow, .pdprice-dis-noshow {
+    display: none
+}
+
+.pd-layout-price p {
+    display: inline-block
+}
+
+
+.product-info {
+    margin-top: 1rem;
+    color: #959291;
+    font-size: 0.5rem;
+}
+
+.product-buylink {
+    margin: 0px auto;
+}
+
+.buylink {
+    background-color: #f5b730;
+    margin-top: 0.3rem;
+    border-radius: 5px 5px;
+    color: #fff;
+    display: block;
+    text-align: center;
+    padding: 0.2rem 0px;
+}
+
+.card-header {
+    background-color: #e9d397;
+    height: 3rem;
+    padding: 0px;
+}
+
+    .card-header button {
+        color: #fff;
+    }
+
+        .card-header button:hover {
+            color: #fff;
+        }
+
+.accordion {
+    margin: 10px 0px;
+}
+
+.pdImage img {
+    width: 100%
+}
+
+.pdtext {
+    color: #D7AF78;
+    font-weight: bold;
+}
+
+    .pdtext:hover {
+        color: #D7AF78;
+        font-weight: bold;
+    }
+
+.pdprice {
+    color: #ee9d9d;
+    padding-right: 20px;
+}
+
+.pd-list-title, .pd-layout-price {
+    text-align: center
+}
+
+.pd-list-content:hover {
+    border: 2px solid #D7AF78;
+}
+
+.pdlist {
+    margin-bottom: 50px;
+}
+
+@media (min-width: 768px) {
+    .pd-title {
+        font-size: 2.5rem
+    }
+
+    .pd-subtitle {
+        font-size: 1.75rem
+    }
+
+    .pd-price {
+        height: 80px;
+        margin: 0px auto;
+        padding-top: calc(80px - 3rem);
+    }
+
+    .price {
+        font-size: 1.5rem;
+        padding-right: 8rem;
+    }
+
+    .price-dis {
+        font-size: 2.5rem;
+    }
+
+    .product-info {
+        margin-top: 2rem;
+        font-size: 1rem
+    }
+
+    .buylink {
+        margin-top: 0.5rem;
+        border-radius: 5px 5px;
+        padding: 1rem 0px;
+    }
+
+    .card-header {
+        padding: 0.75rem 1.25rem;
+        height: 4rem;
+    }
+}

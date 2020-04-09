@@ -1,0 +1,124 @@
+﻿@model HHY.Models.CommonModel
+
+@{
+    ViewData["Title"] = "編輯活動跑馬燈列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h4>編輯活動跑馬燈列表</h4>
+<hr />
+<div id="app" class="row">
+    <div class="col-md-6 admincontent">
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="Title" class="control-label"></label>
+                <input v-model="Data.Title" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Url" class="control-label"></label>
+                <input v-model="Data.Url" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="PublishDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
+                    <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="Data.PublishDate" />
+                    <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DownDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
+                    <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="Data.DownDate" />
+                    <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6 no_chksend">
+                <input type="submit" value="儲存" class="btn btn-info" v-on:click='editSa' />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptBlock{
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: {
+                        Title: '',
+                        Url: '',
+                        PublishDate: '',
+                        DownDate: '',
+                        ID: ''
+                    }
+                }
+            }
+            ,
+            mounted: function () {
+                var self = this;
+                self.getSa();
+                $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                    self.Data.PublishDate = $('#startDate').val();
+                });
+
+                $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                    self.Data.DownDate = $('#endDate').val();
+                });
+            },
+            methods: {
+                getSa: function () {
+                    var self = this;
+                    var url = window.location.search;
+                    var arr = url.split("id=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+                    $.get("/api/admin/getseasonalactivities?id=" + id)
+                        .done(function (result) {
+                            self.Data.Title = result.title;
+                            self.Data.Url = result.url;
+                            self.Data.PublishDate = result.publishDate;
+                            self.Data.DownDate = result.downDate;
+                            self.Data.ID = result.id;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                editSa: function () {
+                    var self = this;
+                    
+                    var formData = new FormData();
+                    formData.append('ID', self.Data.ID);
+                    formData.append('Title', self.Data.Title);
+                    formData.append('Url', self.Data.Url);
+                    formData.append('PublishDate', self.Data.PublishDate);
+                    formData.append('DownDate', self.Data.DownDate);
+                    $.ajax({
+                        contentType: false,
+                        processData: false,
+                        type: 'Put',
+                        url: '/api/admin/editseasonalactivities',
+                        data: formData,
+                        statusCode: {},
+                        success: function () {
+                            alert('修改成功');
+                            location.href = '/SeasonalActivities';
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

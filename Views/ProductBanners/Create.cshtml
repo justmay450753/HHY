@@ -1,0 +1,149 @@
+﻿@model HHY.Models.CommonModel
+@{
+    ViewData["Title"] = "建立商品列表Banner";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h4>建立商品列表Banner</h4>
+<hr />
+<div id="app" class="row">
+    <div class="col-md-6 admincontent">
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="Title" class="control-label"></label>
+                <input v-model="insert.Title" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Url" class="control-label"></label>
+                <input v-model="insert.Url" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="PublishDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
+                    <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="insert.PublishDate" />
+                    <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DownDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
+                    <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="insert.DownDate" />
+                    <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-12">
+                <label asp-for="file" class="control-label"></label><br />
+                <div>
+                    <input type="file" v-on:change="previewImage($event, fileInfo)" accept="image/*">
+                </div>
+                <img style="width: 90%;margin-top: 10px;" :src="fileInfo.imageData">
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6 no_chksend">
+                <input type="submit" value="建立" class="btn btn-info" v-on:click='createProductBanner' />
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptBlock{
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepickerstart').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $('#datetimepickerend').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                $('#datetimepickerend').datetimepicker('minDate', e.date);
+            });
+            $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                $('#datetimepickerstart').datetimepicker('maxDate', e.date);
+            });
+        })
+    </script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    fileInfo:
+                    {
+                        file: null,
+                        imageData: ''
+                    }
+                    ,
+                    insert: {
+                        Title: null,
+                        Url: null,
+                        file: null,
+                        PublishDate: null,
+                        DownDate: null
+                    }
+                }
+            },
+            mounted: function () {
+                var self = this;
+                
+                $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                    self.insert.PublishDate = $('#startDate').val();
+                });
+
+                $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                    self.insert.DownDate = $('#endDate').val();
+                });
+            },
+            methods: {
+                createProductBanner: function () {
+                    var self = this;
+                    var formData = new FormData();
+                    formData.append('Title', self.insert.Title);
+                    formData.append('Url', self.insert.Url);
+                    formData.append('file', self.fileInfo.file);
+                    formData.append('PublishDate', self.insert.PublishDate);
+                    formData.append('DownDate', self.insert.DownDate);
+
+                    $.ajax({
+                        contentType: false,
+                        processData: false,
+                        type: 'Post',
+                        url: '/api/admin/createProductBanner',
+                        data: formData,
+                        statusCode: {},
+                        success: function () {
+                            alert('上傳成功');
+                            location.href = "/ProductBanners";
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                },
+                previewImage: function (event, fileInfo) {
+                    var input = event.target;
+                    var self = this;
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+
+                            fileInfo.file = input.files[0];
+                            fileInfo.imageData = e.target.result;
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            }
+        })
+    </script>
+}
+

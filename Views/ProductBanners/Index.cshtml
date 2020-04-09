@@ -1,0 +1,98 @@
+﻿@model IEnumerable<HHY.Models.CommonModel>
+
+@{
+    ViewData["Title"] = "商品列表Banner列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app">
+    <h2>商品列表Banner列表</h2>
+    <p>
+        <a :href='"/ProductBanners/Create"'>Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ImgUrl)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublishDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DownDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in Data">
+                <td>
+                    {{item.title}}
+                </td>
+                <td>
+                    @*<img :src="item.imgUrl" />*@
+                    {{item.imgUrl}}
+                </td>
+                <td>
+                    {{item.publishDate}}
+                </td>
+                <td>
+                    {{item.downDate}}
+                </td>
+                <td>
+                    <a :href="'/ProductBanners/Edit?id=' + item.id">Edit</a> |
+                    <a v-on:click="deleteProductBanner(item)" style="cursor:pointer">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: []
+                }
+            },
+            mounted: function () {
+                this.getProductBanner();
+            },
+            methods: {
+                getProductBanner: function () {
+                    var self = this;
+                    $.get("/api/admin/getProductBanner")
+                        .done(function (result) {
+                            self.Data = result;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                deleteProductBanner: function (item) {
+                    if (!confirm("確定刪除嗎?")) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        type: 'Delete',
+                        url: '/api/admin/delProductBanner?id=' + item.id,
+                        success: function () {
+                            self.getProductBanner();
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}
+

@@ -1,0 +1,103 @@
+﻿@model IEnumerable<HHY.Models.CommonModel>
+
+@{
+    ViewData["Title"] = "熱銷商品列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>熱銷商品列表</h2>
+
+<div id="app">
+    <p>
+        <a :href='"/HotSaleProducts/Create"'>Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductInfo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AdvertisingLine)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Url)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublishDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DownDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in Data">
+                <td>
+                    {{item.productInfo}}
+                </td>
+                <td>
+                    {{item.advertisingLine}}
+                </td>
+                <td>
+                    {{item.url}}
+                </td>
+                <td>
+                    {{item.publishDate}}
+                </td>
+                <td>
+                    {{item.downDate}}
+                </td>
+                <td>
+                    <a :href="'/HotSaleProducts/Edit?id=' + item.id">Edit</a> |
+                    <a v-on:click="deleteHotsale(item)" style="cursor:pointer">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: []
+                }
+            },
+            mounted: function () {
+                this.getHotsale();
+            },
+            methods: {
+                getHotsale: function () {
+                    var self = this;
+                    $.get("/api/admin/gethotsale")
+                        .done(function (result) {
+                            self.Data = result;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                deleteHotsale: function (item) {
+                    if (!confirm("確定刪除嗎?")) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        type: 'Delete',
+                        url: '/api/admin/delhotsale?id=' + item.id,
+                        success: function () {
+                            self.getHotsale();
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

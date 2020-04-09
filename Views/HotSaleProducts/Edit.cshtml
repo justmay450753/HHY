@@ -1,0 +1,145 @@
+﻿@model HHY.Models.CommonModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>編輯熱銷商品</h4>
+<hr />
+<div id="app" class="row">
+    <div class="col-md-6 admincontent">
+        <div class="form-group admin_content_part">
+            <div class="col-md-12">
+                <label asp-for="ProductID" class="control-label"></label>
+                <select v-model="selected" class="form-control">
+                    <option v-for="option in products" v-bind:value="option.id">{{option.item}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-12">
+                <label asp-for="AdvertisingLine" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
+                    <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="Data.PublishDate" />
+                    <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="PublishDate" class="control-label"></label>
+                <input v-model="Data.PublishDate" type="datetime" class="form-control datestart" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DownDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
+                    <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="Data.DownDate" />
+                    <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6 no_chksend">
+                <input type="submit" value="儲存" class="btn btn-info" v-on:click='editHotSale' />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptBlock{
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepickerstart').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $('#datetimepickerend').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                $('#datetimepickerend').datetimepicker('minDate', e.date);
+            });
+            $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                $('#datetimepickerstart').datetimepicker('maxDate', e.date);
+            });
+        })
+    </script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: {
+                        ProductID: null,
+                        PublishDate: null,
+                        DownDate: null,
+                        AdvertisingLine: null
+                    },
+                    products: [],
+                    selected: ""
+                }
+            },
+            mounted: function () {
+                var self = this;
+                self.getAllProduct();
+                self.getHotsale();
+                $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                    self.Data.PublishDate = $('#startDate').val();
+                });
+
+                $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                    self.Data.DownDate = $('#endDate').val();
+                });
+            },
+            methods: {
+                getHotsale: function () {
+                    var self = this;
+                    var url = window.location.search;
+                    var arr = url.split("id=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+                    $.get("/api/admin/gethotsale?id=" + id)
+                        .done(function (result) {
+                            self.Data.ID = result.id;
+                            self.selected = result.productID;
+                            self.Data.PublishDate = result.publishDate;
+                            self.Data.DownDate = result.downDate;
+                            self.Data.AdvertisingLine = result.advertisingLine;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                editHotSale: function () {
+                    var self = this;
+                    self.Data.ProductID = self.selected;
+                    $.ajax({
+                        type: 'Put',
+                        url: '/api/admin/edithotsale',
+                        data: self.Data,
+                        statusCode: {},
+                        success: function () {
+                            alert('商品建立成功');
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                },
+                getAllProduct: function () {
+                    var self = this;
+                    $.get("/api/admin/getallproduct")
+                        .done(function (result) {
+                            self.products = result;
+                        })
+                        .fail(function () { });
+                }
+            }
+        })
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿{
+   "ContextClassName": "HHYContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "DoNotCombineNamespace": false,
+   "IdReplace": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "ProjectRootNamespace": "HHY",
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Abouts]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Blogs]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[HotSaleProducts]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[KeyVisuals]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Members]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Menu]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[ProductBanners]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Products]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[ReportFile]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[SeasonalActivities]"
+      }
+   ],
+   "UseDatabaseNames": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseSpatial": false
+}

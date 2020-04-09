@@ -1,0 +1,72 @@
+﻿@model HHY.Models.CommonModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "登入";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="~/css/login.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body class="text-center">
+    <div id="login" class="form-signin">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label asp-for="LoginEmail" class="sr-only">Email address</label>
+        <input type="text" v-model="login.Account" class="form-control" placeholder="Email address">
+        <label asp-for="LoginPassword" class="sr-only">Password</label>
+        <input v-model="login.Password" class="form-control" placeholder="Password" type="password">
+        <input class="btn btn-primary" type="submit" v-on:click='loginadmin' value="登入" />
+        <a href="/Index/Forget">忘記密碼</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script src="https://unpkg.com/vue-input-autowidth"></script>
+    <script src="https://unpkg.com/http-vue-loader@1.4.0/src/httpVueLoader.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="https://unpkg.com/chart.js@2.8.0/dist/Chart.bundle.js"></script>
+    <script>
+        var login = new Vue({
+            el: '#login',
+            data: function () {
+                return {
+                    login: {
+                        Account: null,
+                        Password: null
+                    }
+                }
+            },
+            methods: {
+                loginadmin: function () {
+                    var self = this;
+
+                    $.ajax({
+                        type: 'Post',
+                        url: '/api/admin/memberlogin',
+                        data: self.login,
+                        statusCode: {},
+                        success: function () {
+                            alert('登入成功');
+                            location.href = "/Index/Login";
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.message);
+                            location.href = "/Index/Login";
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+</html>

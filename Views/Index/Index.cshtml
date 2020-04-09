@@ -1,0 +1,127 @@
+﻿<div id="content" class="row">
+    <carousel class="keyvisual" :data="keyVisuals"></carousel>
+    <carousel class="notice col-12" :data="seasonalActivities" :controls="false" :indicators="false"></carousel>
+    <div class="col-12 quality-frame">
+        <div class="col-md-6 quality">
+            <p class="quality-title initialism">QUALITY</p>
+            <p class="quality-content">
+                氣候變遷加上農藥濫用，使蜜蜂數量銳減，市場充斥「添加糖蜂蜜」，造成食安疑慮與身體負擔。創辦人本懷社會創業精神，創立「胡家幸福蜂蜜」為蜂農代銷蜂蜜、為消費者嚴選百分百台灣純蜂蜜。
+            </p>
+        </div>
+        <div class="col-md-6">
+            <img src="~/images/bee1.png" />
+        </div>
+    </div>
+    @*<div class="col-sm-4 third-banner" v-for="item in seasonalActivities">
+            <a :href="item.link"><img :src="item.imageUrl" /></a>
+        </div>*@
+    <div class="col-12 hotsale-frame">
+        <div class="hotsale-title">
+            <p>PRODUCES</p>
+            <p>熱銷商品</p>
+        </div>
+        <div class="col-md-8 hotsaleimg-frame">
+            <div class="product-frame ">
+                <div class="product" v-for="item in hotSalesProduct">
+                    <a :href="item.link">
+                        <img :src="item.productImage" />
+                        <div class="nav-mask">
+                            <div class="df-pdtitle1">{{item.productName}}&nbsp&nbsp</div>
+                            <div class="df-weight">{{item.weight}}</div>
+                            <div class="df-price">NT.{{item.orignalPrice}}</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 blog-store-frame">
+        <div class="blog-content">
+            <p class="blog-title">
+                蜂蜜學堂
+            </p>
+            <div class="blog" v-for="item in blogs">
+                <div class="blog-img">
+                    <a :href="item.link">
+                        <img :src="item.image" alt="item.title" />
+                    </a>
+                </div>
+                <div class="blog-info">
+                    <a :href="item.link">
+                        <p class="blog-text">{{item.title}}</p>
+                        <p class="blog-subcontent">{{item.subContent}}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="store-content">
+            <p class="store-title">
+                門市據點
+            </p>
+            <div class="store">
+                <div class="store-type">
+                    總店
+                </div>
+                <div class="store-info">
+                    新北市新莊區民安路205號1樓<br />
+                    (02)2205-3691
+                </div>
+            </div>
+            <div class="store">
+                <div class="store-type">
+                    忠孝SOGO據點
+                </div>
+                <div class="store-info">
+                    台北市大安區忠孝東路四段45號B1
+                    <a href="https://goo.gl/maps/V9nKhTkPonfPZCze8" target="_blank"><img src="~/images/map.png" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptBlock{
+    <script>
+        $('.carousel').carousel({
+            interval: 6000,
+            pause: true
+        })
+        $('.notice').carousel({
+            interval: 12000,
+            pause: true
+        })
+    </script>
+    <script>
+        var content = new Vue({
+            el: '#content',
+            data: function () {
+                return {
+                    keyVisuals: [],
+                    blogs: [],
+                    hotSalesProduct: [],
+                    seasonalActivities: []
+                }
+            },
+            mounted: function () {
+                this.getContent();
+            },
+            methods: {
+                getContent: function () {
+                    var self = this;
+                    $.get("/api/web/default")
+                        .done(function (result) {
+                            self.keyVisuals = result.keyVisuals;
+                            self.blogs = result.blogs;
+                            self.hotSalesProduct = result.hotSales;
+                            self.seasonalActivities = result.seasonalActivities;
+                        })
+                        .fail(function () {
+
+                        })
+                }
+            }
+        })
+
+    </script>
+}
+
+

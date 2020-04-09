@@ -1,0 +1,50 @@
+﻿<link href="~/css/about.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "About";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<div id="about" class="col-12">
+    <div class="col-6 aboutcontent">
+        <!--end .breadcrumb-->
+        <h1  class="am_title">{{about.Title}}</h1>
+        <div v-html="about.Content">
+
+        </div>
+    </div>
+</div>
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#about',
+            data: function () {
+                return {
+                    about: {
+                        Title: null,
+                        Content: null
+                    }
+                }
+            },
+            mounted: function () {
+                this.getAbout();
+            },
+            methods: {
+                getAbout: function () {
+                    var self = this;
+                    var url = window.location.search;
+                    var arr = url.split("id=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+                    $.get("/api/web/about?id=" + id)
+                        .done(function (result) {
+                            self.about.Title = result.title;
+                            self.about.Content = result.content;
+                        })
+                        .fail(function () {
+
+                        })
+                }
+            }
+        })
+    </script>
+}

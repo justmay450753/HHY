@@ -1,0 +1,48 @@
+﻿<link href="~/css/blog.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "BlogContent";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<div id="content" class="col-12 blogcontent">
+    <h1>{{blog.title}}</h1>
+    <div v-html="blog.subcontent">
+    </div>
+    <div v-html="blog.content">
+    </div>
+</div>
+@section ScriptBlock{
+    <script>
+        var content = new Vue({
+            el: '#content',
+            data: function () {
+                return {
+                    blog: {
+                        title: null,
+                        subcontent: null,
+                        content: null
+                    }
+                }
+            },
+            mounted: function () {
+                this.getblogContent();
+            },
+            methods: {
+                getblogContent: function () {
+                    var self = this;
+                    var url = window.location.search;
+                    var arr = url.split("id=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+                    $.get("/api/web/blogcontent?id=" + id)
+                        .done(function (result) {
+                            self.blog = result;
+                            document.title += "-" + self.blog.title;
+                        })
+                        .fail(function () {
+
+                        })
+                }
+            }
+        })</script>
+}

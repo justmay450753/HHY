@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>胡家幸福蜂蜜</title>
+    <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet" />
+    <link href="~/css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div id="app" class="row">
+            <nav class="navbar navbar-expand-md fixed-top  header">
+                <a class="col-4 navbar-brand logo" href="/"><img src="~/images/logo.png" alt="logo" /></a>
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon" data-feather="align-justify"></span>
+                </button>
+                <div class="menu col-8 navbar-collapse collapse" id="navbarCollapse" style="">
+                    <ul class="navbar-nav">
+                        <li class="nav-item" v-for="item in menus">
+                            <a :href="item.link" class="nav-link">{{item.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        @RenderBody()
+        <div id="top" class="top-icon">
+            <button data-feather="arrow-up-circle" onclick="topFunction()"></button>
+        </div>
+    </div>
+    <div id="footer" class="col-12 footer-pc-frame">
+        <div class="container">
+            <div class="footer-left col-3">
+                <div class="footer-logo">
+                    <img src="~/images/only-logo.png" />
+                </div>
+                <div class="social">
+                    <a href="https://www.facebook.com/hu.happyhoney/"><img src="~/images/facebook.svg" /></a>
+                    <a href="https://www.facebook.com/hu.happyhoney/"><img src="~/images/line.svg" /></a>
+                </div>
+            </div>
+            <div class="footer-middle col-3">
+                <div class="service-title">
+                    關於我們
+                </div>
+                <div class="service-content">
+                    <span data-feather="phone"></span>0987654321<br>
+                    <span data-feather="mail"></span><br />
+                    <span data-feather="clock"></span>
+                </div>
+            </div>
+            <div class="footer-right col-4">
+                <div class="service-title">
+                    其他事項
+                </div>
+                <div class="service-content">
+                    <div class="static" v-for="item in statics">
+                        <a :href="item.link"><span class="chtxt">{{item.title}}</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-mb" class="footer-mob-frame">
+        <div class="mob-footer">
+            <div class="navbar-collapse collapse" data-parent="#footer-mb" id="footer-service">
+                <div class="footer_help">
+                    <div class="footer_helplist">
+                        <a href="https://www.facebook.com/hu.happyhoney/" target="_blank" title="Messenger ">
+                            <img src="~/images/facebook-white.svg" />
+                            <span>Messenger</span>
+                        </a>
+                    </div>
+                    <div class="footer_helplist">
+                        <a href="https://www.facebook.com/hu.happyhoney/" target="_blank" title="Line">
+                            <img src="~/images/line-white.svg" />
+                            Line
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-collapse collapse" data-parent="#footer-mb" id="footer-about">
+                <div class="footer_help">
+                    <div class="footer_helplist" v-for="item in statics">
+                        <a :href="item.link"><span class="chtxt">{{item.title}}</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer_mitem">
+                <div class="footer-icon">
+                    <a href="javascript:void(0)" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#footer-service" aria-expanded="true" aria-controls="collapseOne">
+                        <span data-feather="message-square"></span>
+                    </a>
+                </div>
+                <div class="footer-icon">
+                    <a href="javascript:void(0)" class="footer-icon navbar-toggler collapsed" data-toggle="collapse" data-target="#footer-about" aria-expanded="true" aria-controls="collapseOne">
+                        <span data-feather="help-circle"></span>
+                    </a>
+                </div>
+                <div class="footer-icon">
+                    <a href="tel:+60-322421997" class="footer-icon"><span data-feather="phone-call"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
+    <script src="https://unpkg.com/http-vue-loader@1.4.0/src/httpVueLoader.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="~/js/vue-carousel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script src="~/js/dashboard.js"></script>
+    <script>
+        var header = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    menus: [],
+                    statics: []
+                }
+            },
+            mounted: function () {
+                this.getMenu();
+            },
+            methods: {
+                getMenu: function () {
+                    var self = this;
+                    $.get("/api/web/menus")
+                        .done(function (result) {
+                            self.menus = result;
+                        })
+                        .fail(function () {
+
+                        })
+                }
+            }
+        })
+        var footer = new Vue({
+            el: '#footer',
+            data: function () {
+                return {
+                    statics: []
+                }
+            },
+            mounted: function () {
+                this.getFooter();
+            },
+            methods: {
+                getFooter: function () {
+                    var self = this;
+                    $.get("/api/web/footers")
+                        .done(function (result) {
+                            self.statics = result;
+                        })
+                        .fail(function () {
+
+                        })
+                }
+            }
+        })
+
+        var footermb = new Vue({
+            el: '#footer-mb',
+            data: function () {
+                return {
+                    statics: []
+                }
+            },
+            mounted: function () {
+                this.getFooter();
+            },
+            methods: {
+                getFooter: function () {
+                    var self = this;
+                    $.get("/api/web/footers")
+                        .done(function (result) {
+                            self.statics = result;
+                        })
+                        .fail(function () {
+
+                        })
+                }
+            }
+        })
+    </script>
+    <script>
+        //Get the button
+        var mybutton = document.getElementById("top");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    @RenderSection("ScriptBlock", false)
+</body>
+</html>

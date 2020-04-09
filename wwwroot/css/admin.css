@@ -1,0 +1,191 @@
+﻿/* stylelint-disable selector-list-comma-newline-after */
+body {
+    font-family: "微軟正黑體";
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+}
+
+.admin-header {
+    line-height: 1;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.admin-header-logo {
+    font-family: "微軟正黑體","Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: 2.25rem;
+}
+
+    .admin-header-logo:hover {
+        text-decoration: none;
+    }
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "微軟正黑體","Playfair Display", Georgia, "Times New Roman", serif;
+}
+
+.display-4 {
+    font-size: 2.5rem;
+}
+
+@media (min-width: 768px) {
+    .display-4 {
+        font-size: 3rem;
+    }
+
+    .h-md-250 {
+        height: 250px;
+    }
+
+    .navbar-collapse.collapse {
+        /* display: block!important; */
+        height: auto !important;
+        padding-bottom: 0;
+        overflow: visible !important;
+    }
+}
+
+.nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
+}
+
+    .nav-scroller .nav {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-scroller .nav-link {
+        padding-top: .75rem;
+        padding-bottom: .75rem;
+        font-size: .875rem;
+    }
+
+.card-img-right {
+    height: 100%;
+    border-radius: 0 3px 3px 0;
+}
+
+.flex-auto {
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+}
+
+.h-250 {
+    height: 250px;
+}
+
+/* Pagination */
+.admin-pagination {
+    margin-bottom: 4rem;
+}
+
+    .admin-pagination > .btn {
+        border-radius: 2rem;
+    }
+
+/*
+ * admin posts
+ */
+.admin-post {
+    margin-bottom: 4rem;
+}
+
+.admin-post-title {
+    margin-bottom: .25rem;
+    font-size: 2.5rem;
+}
+
+.admin-post-meta {
+    margin-bottom: 1.25rem;
+    color: #999;
+}
+
+/*
+ * Footer
+ */
+.admin-footer {
+    padding: 2.5rem 0;
+    color: #999;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-top: .05rem solid #e5e5e5;
+}
+
+    .admin-footer p:last-child {
+        margin-bottom: 0;
+    }
+
+
+.back {
+    border: 1px solid #000;
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    .back:hover {
+        text-decoration: none;
+        outline: none;
+    }
+
+.send, .no_chksend {
+    float: right;
+}
+
+    .send input {
+        float: right;
+        width: 50%;
+    }
+
+    .no_chksend input {
+        float: right;
+        width: 50%;
+        margin-top: 10px;
+    }
+
+.logo img {
+    width: 150px;
+}
+
+.admin-layout {
+    margin: 0px auto
+}
+
+    .admin-layout .col-md-5 {
+        display: inline-block
+    }
+
+.product-img {
+    border: 1px solid #000;
+    margin-bottom: 10px;
+}
+
+    .product-img img {
+        width: 50%;
+        margin:0px auto
+    }

@@ -1,0 +1,89 @@
+﻿@model IEnumerable<HHY.Models.CommonModel>
+
+@{
+    ViewData["Title"] = "活動跑馬燈列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>活動跑馬燈列表</h2>
+<div id="app">
+    <p>
+        <a :href='"/SeasonalActivities/Create"'>Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublishDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DownDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in Data">
+                <td>
+                    {{item.title}}
+                </td>
+                <td>
+                    {{item.publishDate}}
+                </td>
+                <td>
+                    {{item.downDate}}
+                </td>
+                <td>
+                    <a :href="'/SeasonalActivities/Edit?id=' + item.id">Edit</a> |
+                    <a v-on:click="deleteSa(item)" style="cursor:pointer">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: []
+                }
+            },
+            mounted: function () {
+                this.getSa();
+            },
+            methods: {
+                getSa: function () {
+                    var self = this;
+                    $.get("/api/admin/getseasonalactivities")
+                        .done(function (result) {
+                            self.Data = result;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.message);
+                        });
+                },
+                deleteSa: function (item) {
+                    if (!confirm("確定刪除嗎?")) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        type: 'Delete',
+                        url: '/api/admin/delseasonalactivities?id=' + item.id,
+                        success: function () {
+                            self.getSa();
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

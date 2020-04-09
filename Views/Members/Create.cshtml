@@ -1,0 +1,79 @@
+﻿@model HHY.Models.CommonModel
+@{
+    ViewData["Title"] = "建立後台人員";
+    Layout = "_Layout";
+}
+<h4>建立後台人員</h4>
+<hr />
+<div id="app" class="row">
+    <div class="col-md-6 admincontent">
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="Email" class="control-label"></label>
+                <input v-model="insert.Email" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Name" class="control-label"></label>
+                <input v-model="insert.Name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="Password" class="control-label"></label>
+                <input v-model="insert.Password" class="form-control" type="password" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="CheckPassword" class="control-label"></label>
+                <input v-model="insert.CheckPassword" class="form-control" type="password" />
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="checkbox col-md-4">
+                <label>
+                    <input type="checkbox" v-model="insert.IsVerify" /> @Html.DisplayNameFor(model => model.IsVerify)
+                </label>
+            </div>
+            <div class="col-md-6 send">
+                <input type="submit" value="新增" class="btn btn-info" v-on:click='createMember'/>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    insert: {
+                        Email: null,
+                        Password: null,
+                        Name: null,
+                        CheckPassword: null,
+                        IsVerify: null
+                    }
+                }
+            },
+            mounted: function () {
+            },
+            methods: {
+                createMember: function () {
+                    var self = this;
+                    $.ajax({
+                        type: 'Post',
+                        url: '/api/admin/admin_content_part',
+                        data: self.insert,
+                        success: function () {
+                            alert("建立成功");
+                            location.href = "/Members/Index";
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

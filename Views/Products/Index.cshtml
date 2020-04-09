@@ -1,0 +1,114 @@
+﻿@model IEnumerable<HHY.Models.CommonModel>
+
+@{
+    ViewData["Title"] = "商品列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>商品列表</h2>
+<div id="app">
+    <p>
+        <a :href='"/Products/Create"'>Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Weight)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SalePrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublishDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DownDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsPromotion)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in Data">
+                <td>
+                    {{item.name}}
+                </td>
+                <td>
+                    {{item.weight}}
+                </td>
+                <td>
+                    {{item.price}}
+                </td>
+                <td>
+                    {{item.salePrice}}
+                </td>
+                <td>
+                    {{item.publishDate}}
+                </td>
+                <td>
+                    {{item.downDate}}
+                </td>
+                <td>
+                    {{item.isPromotion == false ? '否' : '是'}}
+                </td>
+                <td>
+                    <a :href="'/Products/Edit?id=' + item.id">Edit</a> |
+                    <a v-on:click="deleteProduct(item)" style="cursor:pointer">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: []
+                }
+            },
+            mounted: function () {
+                this.getProduct();
+            },
+            methods: {
+                getProduct: function () {
+                    var self = this;
+                    $.get("/api/admin/getproduct")
+                        .done(function (result) {
+                            self.Data = result;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                deleteProduct: function (item) {
+                    if (!confirm("確定刪除嗎?")) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        type: 'Delete',
+                        url: '/api/admin/delproduct?id=' + item.id,
+                        success: function () {
+                            self.getProduct();
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

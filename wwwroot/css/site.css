@@ -1,0 +1,18 @@
+﻿.field-valiation-error{
+    color:red
+}
+.field-valiation-valid{
+    display:none
+}
+input.input-valiation-error{
+    border:1px solid #b94a48
+}
+.input[type="checkbox"].input-valiation-error{
+    border:0 none
+}
+.valiation-summary-errors{
+    color:red;
+}
+.valiation-summary-valid{
+    display:none;
+}

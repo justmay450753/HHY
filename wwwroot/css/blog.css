@@ -1,0 +1,29 @@
+﻿.blogcontent {
+    min-height: 800px;
+    text-align: center;
+    margin: 100px auto 0px auto
+}
+
+.blog-list div {
+    display: inline-block;
+    float: left
+}
+
+.blog-list-title {
+    color: #000
+}
+
+.blog-menu {
+    margin: 0px auto 15px;
+}
+
+    .blog-menu ul li {
+        padding: 0px !important;
+        color: #D7AF78;
+        font-weight: bold;
+        cursor: pointer
+    }
+
+.blog-type.acitve {
+    background-color: #e9d397
+}

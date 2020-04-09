@@ -1,0 +1,93 @@
+﻿@model IEnumerable<HHY.Models.CommonModel>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "後台人員清單";
+}
+
+<h2>後台人員清單</h2>
+
+<div id="app">
+
+    <p>
+        <a :href='"/Members/Create"'>Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsVerify)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in Data">
+                <td>
+                    {{item.email}}
+                </td>
+                <td>
+                    {{item.name}}
+                </td>
+                <td v-if="item.isVerify==true">
+                    是
+                </td>
+                <td v-else="item.isVerify==false">
+                    否
+                </td>
+                <td>
+                    <a :href="'/Members/Edit?id=' + item.id">Edit</a> |
+                    <a v-on:click="deleteMember(item)" style="cursor:pointer">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: []
+                }
+            },
+            mounted: function () {
+                this.getMember();
+            },
+            methods: {
+                getMember: function () {
+                    var self = this;
+                    $.get("/api/admin/membergetmember")
+                        .done(function (result) {
+                            self.Data = result;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                deleteMember: function (item) {
+                    if (!confirm("確定刪除嗎?")) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        type: 'Delete',
+                        url: '/api/admin/memberdelete?id=' + item.id,
+                        success: function () {
+                            self.getMember();
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

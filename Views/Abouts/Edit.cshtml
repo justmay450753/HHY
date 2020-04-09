@@ -1,0 +1,148 @@
+﻿@model HHY.Models.CommonModel
+@{
+    ViewData["Title"] = "編輯靜態頁面";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>編輯靜態頁面</h4>
+<hr />
+<div id="app" class="row">
+    <div class="col-md-6 admincontent">
+        <div class="form-group admin_content_part">
+            <div class="col-md-12">
+                <label class="control-label">標題</label>
+                <input v-model="edit.Title" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="control-label">內容</label>
+                <div>
+                    <vue-ckeditor v-model="edit.Content"></vue-ckeditor>
+                </div>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6">
+                <label asp-for="PublishDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
+                    <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="edit.PublishDate" />
+                    <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DownDate" class="control-label"></label>
+                <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
+                    <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="edit.DownDate" />
+                    <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i data-feather="calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group admin_content_part">
+            <div class="col-md-6 no_chksend">
+                <input type="submit" value="儲存" class="btn btn-info" v-on:click='editAbout' />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptBlock{
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepickerstart').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $('#datetimepickerend').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                $('#datetimepickerend').datetimepicker('minDate', e.date);
+            });
+            $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                $('#datetimepickerstart').datetimepicker('maxDate', e.date);
+            });
+        })
+    </script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    fileInfo:
+                    {
+                        file: null,
+                        imageData: ''
+                    }
+                    ,
+                    edit: {
+                        ID: null,
+                        Title: null,
+                        Content: null,
+                        PublishDate: null,
+                        DownDate: null
+                    }
+                }
+            },
+            mounted: function () {
+                this.getAbout();
+                var self = this;
+                $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                    self.edit.PublishDate = $('#startDate').val();
+                });
+
+                $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                    self.edit.DownDate = $('#endDate').val();
+                });
+            },
+            methods: {
+                editAbout: function () {
+                    var self = this;
+
+                    $.ajax({
+                        type: 'Put',
+                        url: '/api/admin/editabout',
+                        data: self.edit,
+                        statusCode: {},
+                        success: function () {
+                            alert("新增成功");
+                            location.href = "/Abouts/Index";
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                },
+                getAbout: function () {
+                    var self = this;
+                    var url = window.location.search;
+                    var arr = url.split("id=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+
+                    $.get("/api/admin/getabout?id=" + id)
+                        .done(function (result) {
+                            self.edit.Title = result.title;
+                            self.edit.Content = result.content;
+                            self.edit.DownDate = result.downDate;
+                            self.edit.PublishDate = result.publishDate;
+                            self.edit.ID = result.id;
+                            $(".hidPublishDate").val(result.publishDate);
+                            $(".hidDownDate").val(result.downDate);
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                }
+            },
+            components: {
+                'vue-ckeditor': httpVueLoader('/vue/VueCkeditor.vue')
+            }
+        })
+    </script>
+}
+

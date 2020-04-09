@@ -1,0 +1,244 @@
+﻿@model HHY.Models.CommonModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>建立商品資訊</h4>
+<hr />
+<div id="app" class="col-md-9 admin-layout">
+    <div class="col-md-5">
+        <label asp-for="file" class="control-label"></label><br />
+        <div>
+            <input type="file" v-on:change="previewImage($event, fileInfo)" accept="image/*">
+        </div>
+    </div>
+    <div class="col-md-5">
+        <img :src="fileInfo.imageData">
+    </div>
+    <div class="col-md-5">
+        <label asp-for="ProductName" class="control-label"></label>
+        <input v-model="insert.Name" class="form-control" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Weight" class="control-label"></label>
+        <input v-model="insert.Weight" class="form-control" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="BuyUrl" class="control-label"></label>
+        <input v-model="insert.BuyUrl" class="form-control" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="SubTitle" class="control-label"></label>
+        <input v-model="insert.SubTitle" class="form-control" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Price" class="control-label"></label>
+        <input v-model="insert.Price" class="form-control" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="SalePrice" class="control-label"></label>
+        <input v-model="insert.SalePrice" class="form-control" />
+    </div>
+    <div class="col-md-9">
+        <label asp-for="IsPromotion" class="control-label"></label>
+        <input type="checkbox" v-model="insert.IsPromotion" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="PublishDate" class="control-label"></label>
+        <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
+            <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="insert.PublishDate" />
+            <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
+                <div class="input-group-text"><i data-feather="calendar"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="DownDate" class="control-label"></label>
+        <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
+            <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="insert.DownDate" />
+            <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
+                <div class="input-group-text"><i data-feather="calendar"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Information" class="control-label"></label>
+        <vue-ckeditor v-model="insert.Information"></vue-ckeditor>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Standard" class="control-label"></label>
+        <vue-ckeditor v-model="insert.Standard"></vue-ckeditor>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Reportfile" class="control-label"></label><br />
+        <div v-for="item in reportfileInfos">
+            <div>
+                <input :id="item.uuid" type="file" v-on:change="previewReportImage($event, item)" accept="image/*">
+            </div>
+            <img style="width: 50%;margin-top: 10px;" :src="item.imageData"><button v-if="item.file !== null" v-on:click="fileDeleteClick(item)">刪除</button>
+        </div>
+    </div>
+    <div class="admin_content_part">
+        <div class="col-md-5 no_chksend">
+            <input type="submit" value="建立" class="btn btn-info" v-on:click='createProduct' />
+        </div>
+    </div>
+</div>
+@section ScriptBlock{
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepickerstart').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $('#datetimepickerend').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY/MM/DD HH:mm:ss'
+            });
+            $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                $('#datetimepickerend').datetimepicker('minDate', e.date);
+            });
+            $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                $('#datetimepickerstart').datetimepicker('maxDate', e.date);
+            });
+        })
+    </script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    fileInfo:
+                    {
+                        file: null,
+                        imageData: ''
+                    }
+                    ,
+                    reportfileInfos: [{
+                        uuid: this.uuidv4(),
+                        file: null,
+                        imageData: ''
+                    }],
+                    insert: {
+                        Name: null,
+                        Weight: null,
+                        Price: null,
+                        SalePrice: null,
+                        Information: null,
+                        file: null,
+                        Reportfile: null,
+                        PublishDate: null,
+                        DownDate: null,
+                        BuyUrl: null,
+                        SubTitle: null,
+                        Standard: null
+                    }
+                }
+            },
+            mounted: function () {
+                var self = this;
+                $("#datetimepickerstart").on("change.datetimepicker", function (e) {
+                    self.insert.PublishDate = $('#startDate').val();
+                });
+
+                $("#datetimepickerend").on("change.datetimepicker", function (e) {
+                    self.insert.DownDate = $('#endDate').val();
+                });
+            },
+            methods: {
+                createProduct: function () {
+                    var self = this;
+                    var formData = new FormData();
+                    formData.append('Name', self.insert.Name);
+                    formData.append('Weight', self.insert.Weight);
+                    formData.append('Price', self.insert.Price);
+                    formData.append('SalePrice', self.insert.SalePrice);
+                    formData.append('Information', self.insert.Information);
+                    formData.append('file', self.fileInfo.file);
+                    formData.append('PublishDate', self.insert.PublishDate);
+                    formData.append('DownDate', self.insert.DownDate);
+                    formData.append('BuyUrl', self.insert.BuyUrl);
+                    formData.append('SubTitle', self.insert.SubTitle);
+                    formData.append('Standard', self.insert.Standard);
+                    var files = self.reportfileInfos.filter(function (f) {
+                        return f.file;
+                    }).map(function (f) {
+                        return f.file;
+                    });
+
+                    files.forEach(function (f) {
+                        console.log(f)
+                        formData.append('Reportfile', f);
+                    });
+
+                    $.ajax({
+                        contentType: false,
+                        processData: false,
+                        type: 'Post',
+                        url: '/api/admin/createproduct',
+                        data: formData,
+                        statusCode: {},
+                        success: function () {
+                            alert('商品建立成功');
+                            location.href = "/Products";
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                },
+                uuidv4: function () {
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                        return v.toString(16);
+                    });
+                },
+                previewImage: function (event, fileInfo) {
+                    var input = event.target;
+                    var self = this;
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            fileInfo.file = input.files[0];
+                            fileInfo.imageData = e.target.result;
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                },
+                fileDeleteClick: function (fileInfo) {
+                    $("#" + fileInfo.uuid).val(null);
+                    fileInfo.file = null;
+                    fileInfo.imageData = '';
+                },
+                previewReportImage: function (event, reportfileInfo) {
+                    var input = event.target;
+                    var self = this;
+
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+
+                            reportfileInfo.file = input.files[0];
+                            reportfileInfo.imageData = e.target.result;
+                            if (self.reportfileInfos.every(function (f) {
+                                return f.imageData;
+                            })) {
+                                self.reportfileInfos.push({
+                                    uuid: self.uuidv4(),
+                                    file: null,
+                                    imageData: ''
+                                });
+                            }
+                        }
+                        console.log(self.reportfileInfos[0]);
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            },
+            components: {
+                'vue-ckeditor': httpVueLoader('/vue/VueCkeditor.vue')
+            }
+        })
+    </script>
+}

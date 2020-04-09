@@ -1,0 +1,90 @@
+﻿@model IEnumerable<HHY.Models.CommonModel>
+
+@{
+    ViewData["Title"] = "部落格推薦列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>部落格推薦列表</h2>
+<div id="app">
+    <p>
+        <a :href='"/Blogs/Create"'>Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublishDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DownDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in Data">
+                <td>
+                    {{item.title}}
+                </td>
+                <td>
+                    {{item.publishDate}}
+                </td>
+                <td>
+                    {{item.downDate}}
+                </td>
+                <td>
+                    <a :href="'/Blogs/Edit?id=' + item.id">Edit</a> |
+                    <a v-on:click="deleteBlog(item)" style="cursor:pointer">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Data: []
+                }
+            },
+            mounted: function () {
+                this.getBlog();
+            },
+            methods: {
+                getBlog: function () {
+                    var self = this;
+                    $.get("/api/admin/getblog")
+                        .done(function (result) {
+                            self.Data = result;
+                        })
+                        .fail(function (xhr) {
+                            alert(xhr.responseJSON.Message);
+                        });
+                },
+                deleteBlog: function (item) {
+                    if (!confirm("確定刪除嗎?")) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        type: 'Delete',
+                        url: '/api/admin/delblog?id=' + item.id,
+                        success: function () {
+                            self.getBlog();
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

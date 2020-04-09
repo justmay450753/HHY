@@ -1,0 +1,134 @@
+﻿<link href="~/css/product.css" rel="stylesheet" />
+<div id="content" class="row pdcontent">
+    <div class="col pd-img">
+        <img :src="content.imageUrl" alt="">
+    </div>
+    <div class="col">
+        <h1 class="pd-title">{{content.productName}}</h1>
+        <h3 class="pd-subtitle">{{content.subTitle}}</h3>
+        <div class="pd-price col-md-10">
+            <span v-if="content.origanalPrice !== content.salePrice" class="price discount">NT${{content.origanalPrice}}</span>
+            <span v-else class="price">NT${{content.origanalPrice}}</span>
+            <span v-if="content.origanalPrice === content.salePrice" class="price-dis-noshow">NT${{content.salePrice}}</span>
+            <span v-else class="price-dis">NT${{content.salePrice}}</span>
+        </div>
+        <div class="col-md-12">
+            <div class="product-info" v-html="content.productInfo">
+                {{content.productInfo}}
+            </div>
+        </div>
+        <div class="col-md-5 product-buylink">
+            <a :href="content.buyLink" class="buylink">前往購買</a>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="accordion" id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn col-md-12" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            商品說明
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                        <button class="btn col-md-12 collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            規格說明
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body" v-html="content.standard">
+                        {{content.standard}}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                        <button class="btn col-md-12 collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            運送方式
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h2 class="mb-0">
+                        <button class="btn col-md-12 collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            檢驗報告
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="card-body">
+                        <div v-for="item in content.reportFiles">
+                            <img :src="item" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#content',
+            data: function () {
+                return {
+                    content: {
+                        ImageUrl: null,
+                        OriganalPrice: null,
+                        SalePrice: null,
+                        ProductName: null,
+                        Weight: null,
+                        ProductInfo: null,
+                        BuyLink: null,
+                        ReportFiles: [],
+                        SubTitle: null,
+                        Standard: null
+                    }
+                }
+            },
+            mounted: function () {
+                this.getProductList();
+            },
+            methods: {
+                getProductList: function () {
+                    var self = this;
+                    var url = window.location.search.toLowerCase();
+                    var arr = url.split("id=");
+                    if (arr.length > 1)
+                        var id = arr[1];
+                    $.ajax({
+                        type: 'Get',
+                        url: '/api/web/productdetail?ID=' + id,
+                        statusCode: {},
+                        success: function (result) {
+                            self.content = result;
+                            document.title += "-" + self.content.productName;
+                        },
+                        error: function (xhr, textStatus, error) {
+                            alert(xhr.responseJSON.Message);
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+}

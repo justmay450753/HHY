@@ -1,0 +1,98 @@
+﻿<link href="~/css/blog.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Blog";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<div id="blog" class="col-12 blogcontent">
+    <div class="col-md-6 blog-menu">
+        <ul class="nav ">
+            <li class="nav-item col-md-3 blog-type" data-type="69396A28-110F-4B9E-BAE2-88BEA734E7E1">
+                <a class="nav-link" v-on:click="getResults('69396A28-110F-4B9E-BAE2-88BEA734E7E1')">
+                    甜蜜蜂知識
+                </a>
+            </li>
+
+            <li class="nav-item col-md-3 blog-type" data-type="203EBD71-848D-4FC3-B0B9-5FF9C763CDD1">
+                <a class="nav-link" v-on:click="getResults('203EBD71-848D-4FC3-B0B9-5FF9C763CDD1')">
+                    幸福食譜
+                </a>
+            </li>
+            <li class="nav-item col-md-3 blog-type" data-type="A813A714-5373-4C92-B550-F1234EE8376C">
+                <a class="nav-link" v-on:click="getResults('A813A714-5373-4C92-B550-F1234EE8376C')">
+                    嗡嗡影音
+                </a>
+            </li>
+            <li class="nav-item col-md-3 blog-type" data-type="296D55EE-26A8-4646-83E1-29F4B33A40E1">
+                <a class="nav-link" v-on:click="getResults('296D55EE-26A8-4646-83E1-29F4B33A40E1')">
+                    部落客推薦
+                </a>
+            </li>
+        </ul>
+    </div>
+    @*<div class="col-12" style="border:1px solid #000">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/jgmlLtae9mk" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>*@
+    <div class="col-md-12 blog-list">
+        <div class="col-md-4" v-for="item in results">
+            <a :href="item.link">
+                <img :src="item.image" />
+                <p class="blog-list-title">{{item.title}}</p>
+            </a>
+        </div>
+    </div>
+
+</div>
+@section ScriptBlock{
+    <script>
+        new Vue({
+            el: '#blog',
+            data: function () {
+                return {
+                    blogs: [{
+                        title: null,
+                        subcontent: null,
+                        image: null,
+                        link: null,
+                        type: null
+                    }],
+                    results: [{
+                        title: null,
+                        subcontent: null,
+                        image: null,
+                        link: null,
+                        type: null
+                    }]
+                }
+            },
+            mounted: function () {
+                this.getBlogs();
+            },
+            methods: {
+                getBlogs: function () {
+                    var self = this;
+                    $.get("/api/web/bloglist")
+                        .done(function (result) {
+                            self.blogs = result;
+                            self.getResults('296D55EE-26A8-4646-83E1-29F4B33A40E1');
+                        })
+                        .fail(function () {
+
+                        })
+                },
+                getResults: function (item) {
+                    var self = this;
+                    self.results = [];
+                    for (i = 0; i < self.blogs.length; i++) {
+                        if (self.blogs[i].title !== null && self.blogs[i].type === item) {
+                            self.results.push(self.blogs[i]);
+                        }
+                    }
+                    $('.blog-type').removeClass('acitve');
+                    $(".blog-type[data-type='" + item + "']").toggleClass('acitve');
+                }
+            }
+        })
+    </script>
+}
