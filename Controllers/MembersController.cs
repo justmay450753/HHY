@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HHY.Models;
-using HHY.Models;
 using HHY_NETCore.Provider;
 using Microsoft.AspNetCore.Http;
 using HHY_NETCore.Attributes;
@@ -95,7 +94,14 @@ namespace HHY_NETCore.Controllers
 
             try
             {
-                _context.Add(member);
+                var mem = new Members()
+                {
+                    Email = member.Email,
+                    IsVerify = member.IsVerify,
+                    Name = member.Name,
+                    Password = member.Password
+                };
+                _context.Add(mem);
                 await _context.SaveChangesAsync();
                 return Ok();
             }

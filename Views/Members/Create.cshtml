@@ -51,7 +51,7 @@
                         Password: null,
                         Name: null,
                         CheckPassword: null,
-                        IsVerify: null
+                        IsVerify: false
                     }
                 }
             },
@@ -62,7 +62,7 @@
                     var self = this;
                     $.ajax({
                         type: 'Post',
-                        url: '/api/admin/admin_content_part',
+                        url: '/api/admin/membercreate',
                         data: self.insert,
                         success: function () {
                             alert("建立成功");
