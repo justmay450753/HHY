@@ -124,6 +124,10 @@
         font-size: 2.5rem
     }
 
+    .productbanner a img{
+        width:100%;
+    }
+
     .pd-subtitle {
         font-size: 1.75rem
     }

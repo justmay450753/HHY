@@ -21,6 +21,8 @@ namespace HHY.Models.Product
         public string BuyUrl { get; set; }
         public string SubTitle { get; set; }
 
+        public string Standard { get; set; }
+
         public List<ReportFile> ReportFiles { get; set; }
     }
 }

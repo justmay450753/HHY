@@ -65,6 +65,7 @@ namespace HHY_NETCore.Controllers
                         PublishDate = r.PublishDate,
                         SalePrice = r.SalePrice,
                         Weight = r.Weight,
+                        Standard = r.Standard,
                         ReportFiles = _context.ReportFile.Where(s => s.ProductID == r.ID).ToList()
                     }).FirstOrDefault();
                     return Ok(result);
