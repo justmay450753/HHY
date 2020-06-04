@@ -8,7 +8,10 @@
     <h1>{{blog.title}}</h1>
     <div v-html="blog.subcontent">
     </div>
-    <div v-html="blog.content">
+    <div v-if="blog.videourl === null || blog.videourl === ''" v-html="blog.content">
+    </div>
+    <div v-else v-html="blog.videoUrl">
+        
     </div>
 </div>
 @section ScriptBlock{
@@ -20,7 +23,8 @@
                     blog: {
                         title: null,
                         subcontent: null,
-                        content: null
+                        content: null,
+                        videoUrl: null
                     }
                 }
             },

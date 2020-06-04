@@ -37,7 +37,7 @@
     <div class="col-md-12 blog-list">
         <div class="col-md-4" v-for="item in results">
             <a :href="item.link">
-                <img :src="item.image" />
+                <img :src="item.image" :alt="item.title"/>
                 <p class="blog-list-title">{{item.title}}</p>
             </a>
         </div>

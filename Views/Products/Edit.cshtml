@@ -139,7 +139,8 @@
                         SubTitle: null,
                         ID: null,
                         ReportFiles: [],
-                        Standard: null
+                        Standard: null,
+                        IsPromotion: null
                     }
                 }
             },
@@ -192,6 +193,7 @@
                             self.Data.BuyUrl = result.buyUrl;
                             self.Data.SubTitle = result.subTitle;
                             self.Data.Standard = result.standard;
+                            self.Data.IsPromotion = result.isPromotion;
                         })
                         .fail(function (xhr) {
                             alert(xhr.responseJSON.Message);
@@ -212,6 +214,7 @@
                     formData.append('BuyUrl', self.Data.BuyUrl);
                     formData.append('SubTitle', self.Data.SubTitle);
                     formData.append('Standard', self.Data.Standard);
+                    formData.append('IsPromotion', self.Data.IsPromotion);
                     var files = self.reportfileInfos.filter(function (f) {
                         return f.file;
                     }).map(function (f) {

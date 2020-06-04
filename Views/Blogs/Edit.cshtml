@@ -41,7 +41,7 @@
             <div class="col-md-6">
                 <label asp-for="PublishDate" class="control-label"></label>
                 <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
-                    <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="edit.PublishDate" />
+                    <input id="startDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerstart" v-model="edit.publishDate" />
                     <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
                         <div class="input-group-text"><i data-feather="calendar"></i></div>
                     </div>
@@ -50,7 +50,7 @@
             <div class="col-md-6">
                 <label asp-for="DownDate" class="control-label"></label>
                 <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
-                    <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="edit.DownDate" />
+                    <input id="endDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerend" v-model="edit.downDate" />
                     <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
                         <div class="input-group-text"><i data-feather="calendar"></i></div>
                     </div>
@@ -155,11 +155,11 @@
                     formData.append('Title', self.edit.title);
                     formData.append('VideoUrl', self.edit.videoUrl);
                     formData.append('file', self.fileInfo.file);
-                    formData.append('PublishDate', self.edit.PublishDate);
-                    formData.append('DownDate', self.edit.DownDate);
+                    formData.append('PublishDate', self.edit.publishDate);
+                    formData.append('DownDate', self.edit.downDate);
                     formData.append('Content', self.edit.content);
-                    formData.append('Type', self.edit.Type);
-                    formData.append('SubContent', self.edit.SubContent);
+                    formData.append('Type', self.edit.type);
+                    formData.append('SubContent', self.edit.subContent);
                     $.ajax({
                         contentType: false,
                         processData: false,

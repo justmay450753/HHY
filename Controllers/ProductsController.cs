@@ -195,6 +195,7 @@ namespace HHY_NETCore.Controllers
                     data.BuyUrl = product.BuyUrl;
                     data.Standard = product.Standard;
                     data.SubTitle = product.SubTitle;
+                    data.IsPromotion = product.IsPromotion;
 
                     await _context.SaveChangesAsync();
                     return Ok();

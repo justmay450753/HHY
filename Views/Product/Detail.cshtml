@@ -1,7 +1,7 @@
 ﻿<link href="~/css/product.css" rel="stylesheet" />
 <div id="content" class="row pdcontent">
     <div class="col pd-img">
-        <img :src="content.imageUrl" alt="">
+        <img :src="content.imageUrl" :alt="content.productName">
     </div>
     <div class="col">
         <h1 class="pd-title">{{content.productName}}</h1>

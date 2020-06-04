@@ -12,5 +12,7 @@ namespace HHY.Models.View
         public string SubContent { get; set; }
 
         public string Content { get; set; }
+
+        public string VideoUrl { get; set; }
     }
 }

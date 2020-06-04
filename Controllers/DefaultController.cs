@@ -361,7 +361,10 @@ namespace HHY_NETCore.Controllers
                     {
                         Title = r.Title,
                         SubContent = r.SubContent,
-                        Content = r.Content
+                        Content = r.Content,
+                        VideoUrl = @"<iframe width='560' height='315' src='https://www.youtube.com/embed/" + r.VideoUrl + @"' frameborder='0'
+                                        allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen >
+                                    </iframe"
                     }).FirstOrDefault()
                 );
             }

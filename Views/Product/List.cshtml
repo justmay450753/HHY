@@ -4,10 +4,10 @@
         <a :href="banner.link"><img :src="banner.imageUrl" /></a>
     </div>
     <div class="col-12 pdlist row">
-        <div class="col-4 pd-list-content" v-for="item in content">
+        <div class="col-4 pd-list-content mb-3" v-for="item in content">
             <div class="pdImage">
                 <a :href="item.link" target="_blank">
-                    <img :src="item.imageUrl" :title="item.name">
+                    <img :src="item.imageUrl" :title="item.productName" :alt="item.productName">
                 </a>
             </div>
             <div class="pd-list-title">
@@ -16,7 +16,7 @@
             <div class="pd-layout-price">
                 <p v-if="item.origanalPrice !== item.salePrice" class="pdprice discount">NT${{item.origanalPrice}}</p>
                 <p v-else class="pdprice">NT${{item.origanalPrice}}</p>
-                <p v-if="item.origanalPrice === item.salePrice" class="pdprice-dis-noshow">NT${{item.salePrice}}</p>
+                <p v-if="item.origanalPrice === item.salePrice" class="pdprice-dis-noshow"></p>
                 <p v-else class="pdprice">NT${{item.salePrice}}</p>
             </div>
         </div>
