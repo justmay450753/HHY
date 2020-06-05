@@ -27,17 +27,8 @@ namespace HHY.Models
         public virtual DbSet<ReportFile> ReportFile { get; set; }
         public virtual DbSet<SeasonalActivities> SeasonalActivities { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
-
             modelBuilder.Entity<Abouts>(entity =>
             {
                 entity.Property(e => e.Title)
@@ -48,8 +39,11 @@ namespace HHY.Models
             modelBuilder.Entity<Blogs>(entity =>
             {
                 entity.Property(e => e.Title).IsRequired();
+            });
 
-                entity.Property(e => e.VideoUrl).IsRequired();
+            modelBuilder.Entity<HotSaleProducts>(entity =>
+            {
+                entity.Property(e => e.ProductID);
             });
 
             modelBuilder.Entity<Members>(entity =>

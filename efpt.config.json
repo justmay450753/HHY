@@ -54,6 +54,7 @@
       }
    ],
    "UseDatabaseNames": true,
+   "UseDbContextSplitting": false,
    "UseFluentApiOnly": true,
    "UseHandleBars": false,
    "UseInflector": false,

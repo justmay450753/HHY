@@ -111,7 +111,7 @@ namespace HHY_NETCore.Controllers
                 {
                     var data = Blogs.FirstOrDefault();
                     data.Title = blog.Title;
-                    data.VideoUrl = blog.VideoUrl;
+                    data.VideoUrl = !string.IsNullOrEmpty(blog.VideoUrl) ? blog.VideoUrl : "";
                     data.SubContent = blog.SubContent;
                     data.Type = Guid.Parse(blog.Type);
                     data.Content = blog.Content;

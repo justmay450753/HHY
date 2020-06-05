@@ -7,6 +7,9 @@ namespace HHY.Models
     public partial class HotSaleProducts
     {
         public int ID { get; set; }
+        /// <summary>
+        /// 商品編號
+        /// </summary>
         public Guid ProductID { get; set; }
         public string AdvertisingLine { get; set; }
         public string Url { get; set; }
